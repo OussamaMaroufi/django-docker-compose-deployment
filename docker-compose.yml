@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   app:
+    container_name: dev_app
     build: 
       context: .
     command: >
@@ -12,8 +13,9 @@ services:
       - 8000:8000
     volumes:
       - ./app:/app
+      - ./data.web:/vol/web
       #changes in our src code will be reflected automatically in the container (dev only)
-
+      
     environment:
       - SECRET_KEY=devsecretkey
       - DEBUG=1
@@ -24,10 +26,14 @@ services:
     depends_on:
       - db
   db:
+    container_name: dev_db
     image: postgres:13-alpine
+    restart: always
+
     environment:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=changeme
+
 
 # command allow us to override the run command of the container when we run docker-compose up to make migration after the db available and start services 
